@@ -10,6 +10,7 @@ package proyecto_so2;
  */
 public class Filosofos extends Thread {
     private int Filosofo;
+    //private String Fn;
     private Tenedores  left,right;
     private Silla s;
     public Filosofos (int Filosofo, Tenedores left, Tenedores right, Silla s){
@@ -17,6 +18,7 @@ public class Filosofos extends Thread {
     this.left=left;
     this.right=right;  
     this.s=s;
+    //this.Fn=Fn;
     }
     
     public void run(){

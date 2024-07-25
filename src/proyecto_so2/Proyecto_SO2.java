@@ -25,7 +25,16 @@ public class Proyecto_SO2 {
         Silla s= new Silla();
        Tenedores[] cubiertos = new Tenedores[maestros];
        for(int i =0;i<cubiertos.length;i++){
-       cubiertos[i]= new Tenedores(i);
+           String nombreR= "Derecho";
+           String nombreL="Izquierdo";
+           String f;
+           if(i%2==0){
+          f=nombreR;
+                     }
+           else{
+           f=nombreL;
+           }
+       cubiertos[i]= new Tenedores(i,f);
        }
        Filosofos[] f=new Filosofos[maestros];
        for(int k=0;k<f.length;k++){
