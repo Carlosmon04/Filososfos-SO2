@@ -38,7 +38,7 @@ public class Proyecto_SO2 {
        }
        Filosofos[] f=new Filosofos[maestros];
        for(int k=0;k<f.length;k++){
-       f[k]=new Filosofos(k,cubiertos[k],cubiertos[(k+1)%maestros],s);      
+       f[k]=new Filosofos(k,cubiertos[k],cubiertos[(k+1)%maestros],s,"Fn");      
        }
        for(int j=0;j<f.length;j++){
            f[j].start();

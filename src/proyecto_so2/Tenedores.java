@@ -20,19 +20,40 @@ public class Tenedores {
   this.f=f;
   }
   
-  public synchronized void qTenedores (int i)
+  public synchronized void qTenedores (int i,String Fn)
     throws InterruptedException{
   while(!libre)
       wait();
-  
-      System.out.println("Filosofo "+i+" Agarra Tenedor "+ f+"("+tenedor+")");
-  
+  if(i==0) Fn="Socrates";
+  if(i==1) Fn="Aristoteles";
+  if(i==2) Fn="Valencio";
+  if(i==3) Fn="Serapio";
+  if(i==4) Fn="Serafin";
+  if(i==5) Fn="Ruperegildo";
+  if(i==6) Fn="Eusebio";
+  if(i==7) Fn="Joaques";
+  if(i==8) Fn="Lexor";
+  if(i==9) Fn="Hanibal";
+      System.out.println("Filosofo "+Fn+"("+i+")"  + " Agarra Tenedor "+ f+"("+tenedor+")");
+      System.out.println("");
       libre=false;
   }  
   
-  public synchronized void STenedores(int i){
+  public synchronized void STenedores(int i, String Fn){
   libre=true;
-      System.out.println("Filosofo "+i+" Suelta el Tenedor "+ f+"("+tenedor+")");
+  
+  if(i==0) Fn="Socrates";
+  if(i==1) Fn="Aristoteles";
+  if(i==2) Fn="Valencio";
+  if(i==3) Fn="Serapio";
+  if(i==4) Fn="Serafin";
+  if(i==5) Fn="Ruperegildo";
+  if(i==6) Fn="Eusebio";
+  if(i==7) Fn="Joaques";
+  if(i==8) Fn="Lexor";
+  if(i==9) Fn="Hanibal";
+      System.out.println("Filosofo "+Fn+"(" +i+")"+" Suelta el Tenedor "+ f+"("+tenedor+")");
+      System.out.println("");
       notify();
   }
   

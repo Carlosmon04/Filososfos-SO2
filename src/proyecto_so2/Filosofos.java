@@ -10,27 +10,27 @@ package proyecto_so2;
  */
 public class Filosofos extends Thread {
     private int Filosofo;
-    //private String Fn;
+    private String Fn;
     private Tenedores  left,right;
     private Silla s;
-    public Filosofos (int Filosofo, Tenedores left, Tenedores right, Silla s){
+    public Filosofos (int Filosofo, Tenedores left, Tenedores right, Silla s,String Fn){
     this.Filosofo= Filosofo;
     this.left=left;
     this.right=right;  
     this.s=s;
-    //this.Fn=Fn;
+    this.Fn=Fn;
     }
     
     public void run(){
     while(true){
         try{
-            s.qSilla(Filosofo);
-    left.qTenedores(Filosofo);
-    right.qTenedores(Filosofo);
+            s.qSilla(Filosofo,Fn);
+    left.qTenedores(Filosofo,Fn);
+    right.qTenedores(Filosofo,Fn);
     //comer
-    right.STenedores(Filosofo);
-    left.STenedores(Filosofo);
-    s.sSilla(Filosofo);
+    right.STenedores(Filosofo,Fn);
+    left.STenedores(Filosofo,Fn);
+    s.sSilla(Filosofo,Fn);
         }catch(InterruptedException e){
         e.printStackTrace();
         }
