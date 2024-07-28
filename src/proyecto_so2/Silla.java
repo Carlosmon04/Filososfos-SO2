@@ -11,7 +11,7 @@ package proyecto_so2;
 
 public class Silla {
     
-    private int slibre=(Proyecto_SO2.maestros-1);
+    private int slibre=(Proyecto_SO2.maestros);
     
     public synchronized void qSilla(int i,String Fn) 
             throws InterruptedException{
