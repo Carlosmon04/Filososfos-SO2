@@ -11,6 +11,7 @@ import java.util.Scanner;
  */
 public class Proyecto_SO2 {
     public static int maestros;
+    public static int segundos;
     /**
      * @param args the command line arguments
      */
@@ -19,9 +20,23 @@ public class Proyecto_SO2 {
         // TODO code application logic here
         
         Scanner leer = new Scanner(System.in);
+        Scanner seg = new Scanner(System.in);
+        System.out.println("Antes de Empezar indica que tantos segundos quieres que tarden los filosofos en hacer acciones ");
+        segundos=(seg.nextInt() * 1000);
+        while(segundos<0){
+            System.out.println("No puede Ingresar Valores negativos, Intente de nuevo");
+                    segundos=(seg.nextInt() * 1000);
+
+        }
+        System.out.println("");
         System.out.println("Ingrese la cantidad de FIlosofos que quieren participar ");
         maestros = leer.nextInt();
-        System.out.println(""+ maestros);
+       while(maestros <0  || maestros >10 )
+       {
+           System.out.println("Solo pueden participar de 1 a 10 Filosofos, Intente de nuevo ");
+                   maestros = leer.nextInt();
+
+       }
         Silla s= new Silla();
        Tenedores[] cubiertos = new Tenedores[maestros];
        for(int i =0;i<cubiertos.length;i++){

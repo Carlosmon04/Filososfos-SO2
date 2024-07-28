@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyecto_so2;
-
 /**
  *
  * @author Carlosmon04
@@ -40,8 +39,8 @@ public class Tenedores {
   }  
   
   public synchronized void STenedores(int i, String Fn){
-  libre=true;
   
+      libre=true;  
   if(i==0) Fn="Socrates";
   if(i==1) Fn="Aristoteles";
   if(i==2) Fn="Valencio";
@@ -52,9 +51,11 @@ public class Tenedores {
   if(i==7) Fn="Joaques";
   if(i==8) Fn="Lexor";
   if(i==9) Fn="Hanibal";
+     
       System.out.println("Filosofo "+Fn+"(" +i+")"+" Suelta el Tenedor "+ f+"("+tenedor+")");
       System.out.println("");
       notify();
+     
   }
   
 }
