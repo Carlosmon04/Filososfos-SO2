@@ -95,6 +95,7 @@ public class FilosofosGUI extends JFrame {
                 filosofos[k] = new Filosofos(k, cubiertos[k], cubiertos[(k + 1) % maestros], s, nombre, tenedorSemaforo, maestros, txtOutput);
             }
 
+            mesaPanel.setMaestros(maestros);
             mesaPanel.setTenedores(cubiertos);
             mesaPanel.setFilosofos(filosofos);
             mesaPanel.repaint();

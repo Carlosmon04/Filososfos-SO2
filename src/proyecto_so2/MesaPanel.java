@@ -12,6 +12,10 @@ public class MesaPanel extends JPanel {
         setPreferredSize(new Dimension(400, 400));
     }
 
+    public void setMaestros(int maestros) {
+        this.maestros = maestros;
+    }
+
     public void setTenedores(Tenedores[] tenedores) {
         this.tenedores = tenedores;
     }
