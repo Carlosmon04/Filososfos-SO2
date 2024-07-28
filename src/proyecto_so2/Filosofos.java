@@ -9,65 +9,62 @@ public class Filosofos extends Thread {
     private Tenedores tenedorDerecho;
     private Silla silla;
     private String nombre;
-    private Semaphore semaforo;
-    private int totalFilosofos;
-    private Plato plato;
+    private Semaphore tenedorSemaforo;
+    private int maestros;
     private JTextArea txtOutput;
+    private boolean running;
+    private Plato plato;
 
-    public Filosofos(int id, Tenedores tenedorIzquierdo, Tenedores tenedorDerecho, Silla silla, String nombre, Semaphore semaforo, int totalFilosofos, JTextArea txtOutput) {
+    public Filosofos(int id, Tenedores tenedorIzquierdo, Tenedores tenedorDerecho, Silla silla, String nombre, Semaphore tenedorSemaforo, int maestros, JTextArea txtOutput) {
         this.id = id;
         this.tenedorIzquierdo = tenedorIzquierdo;
         this.tenedorDerecho = tenedorDerecho;
         this.silla = silla;
         this.nombre = nombre;
-        this.semaforo = semaforo;
-        this.totalFilosofos = totalFilosofos;
-        this.plato = new Plato();
+        this.tenedorSemaforo = tenedorSemaforo;
+        this.maestros = maestros;
         this.txtOutput = txtOutput;
+        this.running = true;
+        this.plato = new Plato();
     }
 
+    public void detener() {
+        running = false;
+    }
+
+    @Override
     public void run() {
         try {
-            while (true) {
+            while (running) {
                 pensar();
-                if (totalFilosofos > 1) {
-                    semaforo.acquire();
-                    tenedorIzquierdo.qTenedores(nombre, txtOutput);
-                    tenedorDerecho.qTenedores(nombre, txtOutput);
-                    comer();
-                    tenedorDerecho.sTenedores(nombre, txtOutput);
-                    tenedorIzquierdo.sTenedores(nombre, txtOutput);
-                    semaforo.release();
-                } else {
-                    comer();
-                }
-                Thread.sleep(Proyecto_SO2.segundos);
+                tenedorSemaforo.acquire();
+                tenedorIzquierdo.qTenedores(nombre, txtOutput);
+                tenedorDerecho.qTenedores(nombre, txtOutput);
+                comer();
+                tenedorIzquierdo.sTenedores(nombre, txtOutput);
+                tenedorDerecho.sTenedores(nombre, txtOutput);
+                tenedorSemaforo.release();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
 
     private void pensar() throws InterruptedException {
-        appendOutput(nombre + " está pensando.");
+        appendOutput(nombre + " está pensando...");
         Thread.sleep(Proyecto_SO2.segundos);
     }
 
     private void comer() throws InterruptedException {
-        appendOutput(nombre + " está comiendo. Comida inicial en el plato: " + plato.getComida());
-        while (plato.comerBocado()) {
+        appendOutput(nombre + " está comiendo...");
+        while (plato.comerBocado() && running) {
             appendOutput(nombre + " da un bocado. Comida restante: " + plato.getComida());
-            Thread.sleep(Proyecto_SO2.segundos / 10);
+            Thread.sleep(Proyecto_SO2.segundos);
         }
         appendOutput(nombre + " ha terminado de comer.");
     }
 
     private void appendOutput(String message) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                txtOutput.append(message + "\n");
-            }
-        });
+        SwingUtilities.invokeLater(() -> txtOutput.append(message + "\n"));
     }
 }
