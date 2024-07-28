@@ -8,8 +8,7 @@ public class MesaPanel extends JPanel {
     private Filosofos[] filosofos;
     private int maestros;
 
-    public MesaPanel(int maestros) {
-        this.maestros = maestros;
+    public MesaPanel() {
         setPreferredSize(new Dimension(400, 400));
     }
 

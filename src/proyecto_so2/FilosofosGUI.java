@@ -14,6 +14,7 @@ public class FilosofosGUI extends JFrame {
     private JButton btnStop;
     private Filosofos[] filosofos;
     private MesaPanel mesaPanel;
+    private int maestros;
 
     public FilosofosGUI() {
         setTitle("Problema de los Filósofos Comensales");
@@ -42,7 +43,7 @@ public class FilosofosGUI extends JFrame {
         txtOutput.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(txtOutput);
 
-        mesaPanel = new MesaPanel(5);  // Inicialmente configuramos para 5 filósofos
+        mesaPanel = new MesaPanel();
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mesaPanel, scrollPane);
         splitPane.setResizeWeight(0.5);
@@ -66,55 +67,50 @@ public class FilosofosGUI extends JFrame {
     }
 
     private void iniciarSimulacion() {
-        int maestros;
-        int segundos;
         try {
             maestros = Integer.parseInt(txtFilosofos.getText());
-            segundos = Integer.parseInt(txtSegundos.getText()) * 1000;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            int segundos = Integer.parseInt(txtSegundos.getText()) * 1000;
+            Proyecto_SO2.segundos = segundos;
 
-        if (maestros < 1 || maestros > 10) {
-            JOptionPane.showMessageDialog(this, "Solo pueden participar de 1 a 10 filósofos.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            if (maestros < 1 || maestros > 10) {
+                JOptionPane.showMessageDialog(this, "La cantidad de filósofos debe estar entre 1 y 10.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        Proyecto_SO2.segundos = segundos;
-        Proyecto_SO2.maestros = maestros;
+            txtOutput.setText("");
+            Silla s = new Silla();
+            Semaphore tenedorSemaforo = new Semaphore(maestros - 1);
+            Tenedores[] cubiertos = new Tenedores[maestros];
+            filosofos = new Filosofos[maestros];
 
-        txtOutput.setText("");
-        Silla s = new Silla();
-        Semaphore tenedorSemaforo = new Semaphore(maestros - 1);
-        Tenedores[] cubiertos = new Tenedores[maestros];
-        filosofos = new Filosofos[maestros];
+            for (int i = 0; i < cubiertos.length; i++) {
+                String nombreR = "Derecho";
+                String nombreL = "Izquierdo";
+                String fName = (i % 2 == 0) ? nombreR : nombreL;
+                cubiertos[i] = new Tenedores(i, fName);
+            }
 
-        for (int i = 0; i < cubiertos.length; i++) {
-            String nombreR = "Derecho";
-            String nombreL = "Izquierdo";
-            String fName = (i % 2 == 0) ? nombreR : nombreL;
-            cubiertos[i] = new Tenedores(i, fName);
-        }
+            for (int k = 0; k < filosofos.length; k++) {
+                String nombre = Proyecto_SO2.nombresFilosofos[k];
+                filosofos[k] = new Filosofos(k, cubiertos[k], cubiertos[(k + 1) % maestros], s, nombre, tenedorSemaforo, maestros, txtOutput);
+            }
 
-        for (int k = 0; k < filosofos.length; k++) {
-            String nombre = Proyecto_SO2.nombresFilosofos[k];
-            filosofos[k] = new Filosofos(k, cubiertos[k], cubiertos[(k + 1) % maestros], s, nombre, tenedorSemaforo, maestros, txtOutput);
-        }
+            mesaPanel.setTenedores(cubiertos);
+            mesaPanel.setFilosofos(filosofos);
+            mesaPanel.repaint();
 
-        mesaPanel.setTenedores(cubiertos);
-        mesaPanel.setFilosofos(filosofos);
-        mesaPanel.repaint();
-
-        for (int j = 0; j < filosofos.length; j++) {
-            filosofos[j].start();
-            if ((j + 1) % 4 == 0) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            for (int j = 0; j < filosofos.length; j++) {
+                filosofos[j].start();
+                if ((j + 1) % 4 == 0) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -126,14 +122,5 @@ public class FilosofosGUI extends JFrame {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new FilosofosGUI().setVisible(true);
-            }
-        });
     }
 }
