@@ -1,5 +1,6 @@
 package proyecto_so2;
 
+import javax.swing.*;
 import java.util.concurrent.Semaphore;
 
 public class Filosofos extends Thread {
@@ -11,8 +12,9 @@ public class Filosofos extends Thread {
     private Semaphore semaforo;
     private int totalFilosofos;
     private Plato plato;
+    private JTextArea txtOutput;
 
-    public Filosofos(int id, Tenedores tenedorIzquierdo, Tenedores tenedorDerecho, Silla silla, String nombre, Semaphore semaforo, int totalFilosofos) {
+    public Filosofos(int id, Tenedores tenedorIzquierdo, Tenedores tenedorDerecho, Silla silla, String nombre, Semaphore semaforo, int totalFilosofos, JTextArea txtOutput) {
         this.id = id;
         this.tenedorIzquierdo = tenedorIzquierdo;
         this.tenedorDerecho = tenedorDerecho;
@@ -21,6 +23,7 @@ public class Filosofos extends Thread {
         this.semaforo = semaforo;
         this.totalFilosofos = totalFilosofos;
         this.plato = new Plato();
+        this.txtOutput = txtOutput;
     }
 
     public void run() {
@@ -29,17 +32,16 @@ public class Filosofos extends Thread {
                 pensar();
                 if (totalFilosofos > 1) {
                     semaforo.acquire();
-                    tenedorIzquierdo.qTenedores(nombre);
-                    tenedorDerecho.qTenedores(nombre);
+                    tenedorIzquierdo.qTenedores(nombre, txtOutput);
+                    tenedorDerecho.qTenedores(nombre, txtOutput);
                     comer();
-                    tenedorDerecho.sTenedores(nombre);
-                    tenedorIzquierdo.sTenedores(nombre);
+                    tenedorDerecho.sTenedores(nombre, txtOutput);
+                    tenedorIzquierdo.sTenedores(nombre, txtOutput);
                     semaforo.release();
                 } else {
-                    // Si solo hay un filósofo, simplemente piensa y come sin necesitar tenedores
                     comer();
                 }
-                Thread.sleep(Proyecto_SO2.segundos); // Delay entre acciones
+                Thread.sleep(Proyecto_SO2.segundos);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -47,16 +49,25 @@ public class Filosofos extends Thread {
     }
 
     private void pensar() throws InterruptedException {
-        System.out.println(nombre + " está pensando.");
+        appendOutput(nombre + " está pensando.");
         Thread.sleep(Proyecto_SO2.segundos);
     }
 
     private void comer() throws InterruptedException {
-        System.out.println(nombre + " está comiendo. Comida inicial en el plato: " + plato.getComida());
+        appendOutput(nombre + " está comiendo. Comida inicial en el plato: " + plato.getComida());
         while (plato.comerBocado()) {
-            System.out.println(nombre + " da un bocado. Comida restante: " + plato.getComida());
-            Thread.sleep(Proyecto_SO2.segundos / 10); // Delay por cada bocado
+            appendOutput(nombre + " da un bocado. Comida restante: " + plato.getComida());
+            Thread.sleep(Proyecto_SO2.segundos / 10);
         }
-        System.out.println(nombre + " ha terminado de comer.");
+        appendOutput(nombre + " ha terminado de comer.");
+    }
+
+    private void appendOutput(String message) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtOutput.append(message + "\n");
+            }
+        });
     }
 }
