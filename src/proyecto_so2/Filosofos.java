@@ -10,6 +10,7 @@ public class Filosofos extends Thread {
     private String nombre;
     private Semaphore semaforo;
     private int totalFilosofos;
+    private Plato plato;
 
     public Filosofos(int id, Tenedores tenedorIzquierdo, Tenedores tenedorDerecho, Silla silla, String nombre, Semaphore semaforo, int totalFilosofos) {
         this.id = id;
@@ -19,6 +20,7 @@ public class Filosofos extends Thread {
         this.nombre = nombre;
         this.semaforo = semaforo;
         this.totalFilosofos = totalFilosofos;
+        this.plato = new Plato();
     }
 
     public void run() {
@@ -50,7 +52,11 @@ public class Filosofos extends Thread {
     }
 
     private void comer() throws InterruptedException {
-        System.out.println(nombre + " está comiendo.");
-        Thread.sleep(Proyecto_SO2.segundos);
+        System.out.println(nombre + " está comiendo. Comida inicial en el plato: " + plato.getComida());
+        while (plato.comerBocado()) {
+            System.out.println(nombre + " da un bocado. Comida restante: " + plato.getComida());
+            Thread.sleep(Proyecto_SO2.segundos / 10); // Delay por cada bocado
+        }
+        System.out.println(nombre + " ha terminado de comer.");
     }
 }
